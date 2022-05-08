@@ -37,8 +37,7 @@ export default function IndexPage() {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [suggestMessages, setSuggestMessages] = useState<[string] | []>([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [socketUrl, setSocketUrl] = useState(sessionStorage.getItem("SOCKET_URL") || "http://127.0.0.1:8080");
+  const [socketUrl, setSocketUrl] = useState(sessionStorage.getItem("SOCKET_URL") || window.location.origin);
   const [socket, setSocket] = useState(io(socketUrl, {
     reconnection: false
   }));
@@ -47,7 +46,7 @@ export default function IndexPage() {
   useEffect(() => {
     socket.on("connect", () => {
       setSocketStatus("connected");
-      message.success("connected to server: " + socketUrl);
+      message.success("connected to server: " + socketUrl)
       console.log("socket connected");
     });
 
@@ -116,13 +115,13 @@ export default function IndexPage() {
         setIsSelectMessage(false);
       } else {
         setInputValue(value);
-      };
+      }
 
       if (value.trim().length > 0) {
         if (!socket.connected) {
           console.log("##### socket not connected, i will connect it");
           setSocket(io(socketUrl, { reconnection: false }));
-        };
+        }
         socket.emit("suggest-request", value);
       } else {
         setIsSelectOpen(false);

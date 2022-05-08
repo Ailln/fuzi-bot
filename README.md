@@ -1,19 +1,21 @@
-# fuzi view
+# FUZI BOT
 
-[![Apache2 License](https://img.shields.io/badge/license-Apache2-orange.svg)](https://github.com/Ailln/fuzi-view/blob/main/LICENSE)
-[![stars](https://img.shields.io/github/stars/Ailln/fuzi-view.svg)](https://github.com/Ailln/fuzi-view/stargazers)
-[![forks](https://img.shields.io/github/forks/Ailln/fuzi-view.svg)](https://github.com/Ailln/fuzi-view/network/members)
+[![Apache2 License](https://img.shields.io/badge/license-Apache2-orange.svg)](https://github.com/Ailln/fuzi-bot/blob/main/LICENSE)
+[![stars](https://img.shields.io/github/stars/Ailln/fuzi-bot.svg)](https://github.com/Ailln/fuzi-bot/stargazers)
+[![forks](https://img.shields.io/github/forks/Ailln/fuzi-bot.svg)](https://github.com/Ailln/fuzi-bot/network/members)
 
-🤖️ 聊天机器人——`夫子`的交互界面。
+🤖️ 聊天机器人——`夫子`的聊天交互界面。
 
 ## 1 简介
 
 `夫子` 聊天机器人有 5 个模块组成：
-1. [fuzi-view](https://github.com/Ailln/fuzi-view): 聊天界面模块，与用户进行交互。
-2. [fuzi-nlu](https://github.com/Ailln/fuzi-nlu): 自然语言处理模块，理解用户的问题。
-3. fuzi-core: 对话管理模块，推断用户的意图。
-4. fuzi-admin: 后台管理模块，管理机器人的设置。
-5. fuzi-mark: 数据标注模块，标注用户的问题。
+1. [fuzi-bot](https://github.com/Ailln/fuzi-bot): 聊天界面模块，与用户进行交互。
+2. fuzi-bot-api: 聊天消息接口，与其他后端模块通信。
+3. [fuzi-nlu](https://github.com/Ailln/fuzi-nlu): 自然语言处理模块，理解用户的问题。
+4. fuzi: 对话管理模块，推断用户的意图。
+5. fuzi-admin: 后台管理模块，管理机器人的设置。
+6. fuzi-admin-api: 后台管理接口，与其他后端模块通信。
+7. fuzi-mark: 数据标注模块，标注用户的问题。
 
 ## 2 预览
 
@@ -24,9 +26,9 @@
 ## 3 快速上手
 
 ```bash
-git clone https://github.com/Ailln/fuzi-view.git
+git clone https://github.com/Ailln/fuzi-bot.git
 
-cd fuzi-view
+cd fuzi-bot
 # 安装依赖
 npm install
 
@@ -39,17 +41,17 @@ npm run start
 ### 4.1 Docker
 
 ```bash
-cd fuzi-view
-docker build -t fuzi-view:1.0.0 .
+cd fuzi-bot
+docker build -t fuzi-bot:1.0.0 .
 
-docker run -d -p 8000:80 --name fuzi-view fuzi-view:1.0.0
+docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.0
 # 打开 http://localhost:8000
 ```
 
 ### 4.2 Kubernetes
 
 ```bash
-cd fuzi-view
+cd fuzi-bot
 # 准备好镜像
 kubectl apply -f deploy/deployment.yaml
 # 打开 http://localhost:30100
