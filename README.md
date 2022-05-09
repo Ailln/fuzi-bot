@@ -8,14 +8,16 @@
 
 ## 1 简介
 
-`夫子` 聊天机器人有 5 个模块组成：
+`夫子` 聊天机器人有 7 个模块组成：
 1. [fuzi-bot](https://github.com/Ailln/fuzi-bot): 聊天界面模块，与用户进行交互。
-2. fuzi-bot-api: 聊天消息接口，与其他后端模块通信。
+2. [fuzi-bot-api](https://github.com/Ailln/fuzi-bot-api): 聊天接口模块，与其他后端模块通信。
 3. [fuzi-nlu](https://github.com/Ailln/fuzi-nlu): 自然语言处理模块，理解用户的问题。
 4. fuzi: 对话管理模块，推断用户的意图。
 5. fuzi-admin: 后台管理模块，管理机器人的设置。
 6. fuzi-admin-api: 后台管理接口，与其他后端模块通信。
 7. fuzi-mark: 数据标注模块，标注用户的问题。
+
+![framework](.github/fuzi-framework.png)
 
 ## 2 预览
 
