@@ -1,7 +1,7 @@
 import './index.less';
 
 import { useState, useEffect } from 'react';
-import { SettingOutlined } from '@ant-design/icons';
+import { SettingOutlined, GithubOutlined } from '@ant-design/icons';
 import { Row, Col, Card, Button, Avatar, Input, message, Modal, Form, Tag, Select } from 'antd';
 import { io } from "socket.io-client";
 
@@ -194,7 +194,12 @@ export default function IndexPage() {
               </Form.Item>
             </Form>
           </Modal>
-          <Card title="🤖️ ChatBot" hoverable className="card"
+          <Card title={
+            <div>
+            <Button shape='circle' icon={<GithubOutlined />} href={"https://github.com/Ailln/fuzi-bot"}/>
+              <span style={{ marginLeft: 10 }}>{'FUZI-BOT'}</span>
+            </div>
+          } hoverable className="card"
             extra={
               <div>
                 <Tag color={socketStatus === "connected" ? "success" : "error"}>
