@@ -28,6 +28,6 @@ spec:
     spec:
       containers:
       - name: fuzi-bot
-        image: 192.168.2.101:5000/fuzi-bot:1.0.1
+        image: 192.168.2.101:5000/fuzi-bot:1.0.2
         ports:
         - containerPort: 80

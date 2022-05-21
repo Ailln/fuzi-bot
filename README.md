@@ -46,9 +46,9 @@ npm run start
 ```bash
 cd fuzi-bot
 
-docker build -t fuzi-bot:1.0.1 .
+docker build -t fuzi-bot:1.0.2 .
 
-docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.1
+docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.2
 # 打开 http://localhost:8000
 ```
 
@@ -57,8 +57,8 @@ docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.1
 ```bash
 cd fuzi-bot
 
-docker tag fuzi-bot:1.0.1 192.168.2.101:5000/fuzi-bot:1.0.1
-docker push 192.168.2.101:5000/fuzi-bot:1.0.1
+docker tag fuzi-bot:1.0.2 192.168.2.101:5000/fuzi-bot:1.0.2
+docker push 192.168.2.101:5000/fuzi-bot:1.0.2
 
 kubectl apply -f deploy/deployment.yaml
 # 打开 http://localhost:30100
