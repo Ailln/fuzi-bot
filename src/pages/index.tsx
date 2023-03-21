@@ -1,7 +1,7 @@
-import './index.less';
+import './index.less'
 
-import {useState, useEffect} from 'react';
-import {SettingOutlined, GithubOutlined} from '@ant-design/icons';
+import {useState, useEffect} from 'react'
+import {SettingOutlined, GithubOutlined} from '@ant-design/icons'
 import {
   Row,
   Col,
@@ -14,183 +14,184 @@ import {
   Form,
   Tag,
   Select,
-} from 'antd';
-import {io} from 'socket.io-client';
+} from 'antd'
+import {io} from 'socket.io-client'
 
-const {Meta} = Card;
-const {Option} = Select;
+const {Meta} = Card
+const {Option} = Select
 
-let timer: NodeJS.Timeout;
+let timer: NodeJS.Timeout
 
 export default function IndexPage() {
+  const [modelType, setModelType] = useState('JointNlU')
   const humanMessageTemplate = (message: string) => {
     return {
       sender: 'human',
       avatar: 'https://joesch.moe/api/v1/random?key=1',
-      name: 'Human',
+      name: `Human@${modelType}`,
       content: message,
-    };
-  };
+    }
+  }
   const botMessageTemplate = (message: string) => {
     return {
       sender: 'bot',
       avatar: 'https://joesch.moe/api/v1/random?key=0',
       name: 'Bot',
       content: message,
-    };
-  };
+    }
+  }
 
   const [messages, setMessages] = useState([
     humanMessageTemplate('hi'),
     botMessageTemplate('hello, how can I help you?'),
-  ]);
+  ])
 
-  const [inputValue, setInputValue] = useState('');
-  const [isInputBlur, setIsInputBlur] = useState(false);
-  const [isSelectMessage, setIsSelectMessage] = useState(false);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [suggestMessages, setSuggestMessages] = useState<[string] | []>([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('')
+  const [isInputBlur, setIsInputBlur] = useState(false)
+  const [isSelectMessage, setIsSelectMessage] = useState(false)
+  const [isSelectOpen, setIsSelectOpen] = useState(false)
+  const [suggestMessages, setSuggestMessages] = useState<[string] | []>([])
+  const [modalVisible, setModalVisible] = useState(false)
   const [socketUrl, setSocketUrl] = useState(
     sessionStorage.getItem('SOCKET_URL') || window.location.origin,
-  );
+  )
   const [socket, setSocket] = useState(
     io(socketUrl, {
       reconnection: false,
     }),
-  );
-  const [socketStatus, setSocketStatus] = useState('disconnected');
+  )
+  const [socketStatus, setSocketStatus] = useState('disconnected')
 
   useEffect(() => {
     socket.on('connect', () => {
-      setSocketStatus('connected');
-      message.success('connected to server: ' + socketUrl);
-      console.log('socket connected');
-    });
+      setSocketStatus('connected')
+      message.success('connected to server: ' + socketUrl)
+      console.log('socket connected')
+    })
 
     socket.on('connect_error', (reason) => {
-      message.error('socket connect error: ' + reason);
-      console.log('socket connect error: ' + reason);
-    });
+      message.error('socket connect error: ' + reason)
+      console.log('socket connect error: ' + reason)
+    })
 
     socket.on('error', (reason) => {
-      message.error('socket error: ' + reason);
-      console.log('socket error: ' + reason);
-    });
+      message.error('socket error: ' + reason)
+      console.log('socket error: ' + reason)
+    })
 
     socket.on('disconnect', (reason) => {
-      setSocketStatus('disconnected');
-      message.error('disconnected from server: ' + socketUrl);
-      console.log('socket disconnect: ' + reason);
-    });
+      setSocketStatus('disconnected')
+      message.error('disconnected from server: ' + socketUrl)
+      console.log('socket disconnect: ' + reason)
+    })
 
     socket.on('chat-reply', (msg) => {
-      console.log('socket receive chat-reply: ' + msg);
-      setMessages((messages) => [...messages, botMessageTemplate(msg)]);
-    });
+      console.log('socket receive chat-reply: ' + msg)
+      setMessages((messages) => [...messages, botMessageTemplate(msg)])
+    })
 
     socket.on('suggest-reply', (msg) => {
-      console.log('socket receive suggest-reply: ' + msg);
+      console.log('socket receive suggest-reply: ' + msg)
       if (msg.length > 0) {
-        setIsSelectOpen(true);
+        setIsSelectOpen(true)
       }
-      setSuggestMessages(msg);
-    });
+      setSuggestMessages(msg)
+    })
 
     return () => {
-      socket.close();
-      console.log('socket disconnected');
-    };
-  }, [socket]);
+      socket.close()
+      console.log('socket disconnected')
+    }
+  }, [socket])
 
   // scroll to bottom
   useEffect(() => {
     const messageContent =
-      document.getElementsByClassName('message-content')[0];
+      document.getElementsByClassName('message-content')[0]
     if (messageContent) {
       messageContent.scrollTo({
         top: messageContent.scrollHeight,
         behavior: 'smooth',
-      });
+      })
     }
-  }, [messages.length]);
+  }, [messages.length])
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
   const onModalOk = () => {
-    const formSocketUrl = form.getFieldValue('socketUrl');
-    setSocketUrl(formSocketUrl);
-    setSocket(io(formSocketUrl, {reconnection: false}));
-    sessionStorage.setItem('SOCKET_URL', formSocketUrl);
-    setModalVisible(false);
-  };
+    const formSocketUrl = form.getFieldValue('socketUrl')
+    setSocketUrl(formSocketUrl)
+    setSocket(io(formSocketUrl, {reconnection: false}))
+    sessionStorage.setItem('SOCKET_URL', formSocketUrl)
+    setModalVisible(false)
+  }
 
   const handleSearch = (value: string) => {
-    console.log('search value: ' + value);
-    console.log('search inputValue: ' + inputValue);
+    console.log('search value: ' + value)
+    console.log('search inputValue: ' + inputValue)
 
     if (!isInputBlur) {
       if (isSelectMessage) {
-        setIsSelectMessage(false);
+        setIsSelectMessage(false)
       } else {
-        setInputValue(value);
+        setInputValue(value)
       }
       if (value.trim().length > 0) {
         if (!socket.connected) {
-          console.log('##### socket not connected, i will connect it');
-          setSocket(io(socketUrl, {reconnection: false}));
+          console.log('##### socket not connected, i will connect it')
+          setSocket(io(socketUrl, {reconnection: false}))
         }
 
-        clearTimeout(Number(timer));
+        clearTimeout(Number(timer))
         timer = setTimeout(() => {
-          console.log('!!!!! suggest-request: ' + value);
-          socket.emit('suggest-request', value);
-        }, 1000);
+          console.log('!!!!! suggest-request: ' + value)
+          socket.emit('suggest-request', value)
+        }, 1000)
       } else {
-        setIsSelectOpen(false);
-        setSuggestMessages([]);
+        setIsSelectOpen(false)
+        setSuggestMessages([])
       }
     }
-  };
+  }
 
   const handleChange = (value: string) => {
-    console.log('change: ' + value);
-  };
+    console.log('change: ' + value)
+  }
 
   const handleSelect = (value: string) => {
-    console.log('select: ' + value);
-    setIsSelectMessage(true);
-    setInputValue(value);
-    setIsSelectOpen(false);
-  };
+    console.log('select: ' + value)
+    setIsSelectMessage(true)
+    setInputValue(value)
+    setIsSelectOpen(false)
+  }
 
   const handleKeyDown = (event: any) => {
     if (event.key === 'Enter') {
       if (!isSelectOpen || suggestMessages.length === 0) {
-        handleSend();
+        handleSend()
       } else {
-        setIsSelectMessage(true);
-        setIsSelectOpen(false);
+        setIsSelectMessage(true)
+        setIsSelectOpen(false)
       }
     }
-  };
+  }
 
   const handleSend = (value: string = inputValue) => {
-    console.log('send: ' + value);
+    console.log('send: ' + value)
     if (socketStatus === 'connected') {
       if (value.trim().length > 0) {
-        setMessages((messages) => [...messages, humanMessageTemplate(value)]);
-        socket.emit('chat-request', value);
-        setInputValue('');
+        setMessages((messages) => [...messages, humanMessageTemplate(value)])
+        socket.emit('chat-request', modelType + '@@' + value)
+        setInputValue('')
       } else {
-        message.error('please input message');
+        message.error('please input message')
       }
     } else {
-      message.error('please connect socket url!');
+      message.error('please connect socket url!')
     }
 
-    setIsSelectOpen(false);
-  };
+    setIsSelectOpen(false)
+  }
 
   return (
     <div>
@@ -249,6 +250,17 @@ export default function IndexPage() {
             actions={[
               <div className='human-input'>
                 <Select
+                  className='human-input-select'
+                  defaultValue='JointNLU'
+                  onChange={setModelType}
+                  size='large'
+                  options={[
+                    {value: 'JointNLU', label: 'JointNLU'},
+                    {value: 'ChatGLM-6B', label: 'ChatGLM-6B'},
+                    {value: 'ChatGPT', label: 'ChatGPT'}
+                  ]}
+                />
+                <Select
                   showSearch
                   className='human-input-message'
                   placement='topLeft'
@@ -264,12 +276,12 @@ export default function IndexPage() {
                   onSelect={handleSelect}
                   onInputKeyDown={handleKeyDown}
                   onFocus={() => {
-                    setIsInputBlur(false);
-                    setIsSelectOpen(true);
+                    setIsInputBlur(false)
+                    setIsSelectOpen(true)
                   }}
                   onBlur={() => {
-                    setIsInputBlur(true);
-                    setIsSelectOpen(false);
+                    setIsInputBlur(true)
+                    setIsSelectOpen(false)
                   }}
                   notFoundContent={null}
                   size={'large'}
@@ -315,5 +327,5 @@ export default function IndexPage() {
         <Col xs={0} md={4} lg={6}></Col>
       </Row>
     </div>
-  );
+  )
 }

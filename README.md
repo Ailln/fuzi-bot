@@ -53,8 +53,8 @@ npm run start
 cd fuzi-bot
 
 docker build -t fuzi-bot:1.0.0 .
-
-docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.0
+docker run -d --restart=always --name fuzi-bot \
+  -p 8000:80 fuzi-bot:1.0.0
 # 打开 http://localhost:8000
 ```
 
