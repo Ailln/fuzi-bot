@@ -23,7 +23,7 @@ const {Option} = Select
 let timer: NodeJS.Timeout
 
 export default function IndexPage() {
-  const [modelType, setModelType] = useState('JointNlU')
+  const [modelType, setModelType] = useState('JointNLU')
   const humanMessageTemplate = (message: string) => {
     return {
       sender: 'human',
@@ -251,7 +251,7 @@ export default function IndexPage() {
               <div className='human-input'>
                 <Select
                   className='human-input-select'
-                  defaultValue='JointNLU'
+                  defaultValue={modelType}
                   onChange={setModelType}
                   size='large'
                   options={[
