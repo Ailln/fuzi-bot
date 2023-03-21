@@ -33,15 +33,15 @@ git clone https://github.com/Ailln/fuzi-bot.git
 
 cd fuzi-bot
 # 本地系统环境开发
-npm install
+npm install --registry=https://registry.npmmirror.com
 npm run start
 # 打开 http://localhost:8000
 
 # 本地 docker 环境开发
 docker run -it --name fuzi-bot -v $PWD:/app \
-  -p 8000:8000 node:16.18.1-buster bash
+  -p 8000:8000 node:16.18.1-slim bash
 cd /app
-npm install
+npm install --registry=https://registry.npmmirror.com
 npm run start
 ```
 

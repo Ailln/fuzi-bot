@@ -137,11 +137,11 @@ export default function IndexPage() {
       }
       if (value.trim().length > 0) {
         if (!socket.connected) {
-          console.log('##### socket   not connected, i will connect it');
+          console.log('##### socket not connected, i will connect it');
           setSocket(io(socketUrl, {reconnection: false}));
         }
 
-        clearTimeout(timer);
+        clearTimeout(Number(timer));
         timer = setTimeout(() => {
           console.log('!!!!! suggest-request: ' + value);
           socket.emit('suggest-request', value);
@@ -177,26 +177,31 @@ export default function IndexPage() {
 
   const handleSend = (value: string = inputValue) => {
     console.log('send: ' + value);
-    if (value.trim().length > 0) {
-      setMessages((messages) => [...messages, humanMessageTemplate(value)]);
-      socket.emit('chat-request', value);
-      setInputValue('');
+    if (socketStatus === 'connected') {
+      if (value.trim().length > 0) {
+        setMessages((messages) => [...messages, humanMessageTemplate(value)]);
+        socket.emit('chat-request', value);
+        setInputValue('');
+      } else {
+        message.error('please input message');
+      }
     } else {
-      message.error('please input message');
+      message.error('please connect socket url!');
     }
+
     setIsSelectOpen(false);
   };
 
   return (
     <div>
-      <Row className="card-body">
+      <Row className='card-body'>
         <Col xs={0} md={4} lg={6}></Col>
         <Col xs={24} md={16} lg={12}>
           <Modal
-            title="Settings"
+            title='Settings'
             centered
             destroyOnClose
-            visible={modalVisible}
+            open={modalVisible}
             onOk={onModalOk}
             onCancel={() => setModalVisible(false)}
             width={400}
@@ -208,8 +213,8 @@ export default function IndexPage() {
               initialValues={{socketUrl: socketUrl}}
             >
               <Form.Item
-                label="SOCKET_URL"
-                name="socketUrl"
+                label='SOCKET_URL'
+                name='socketUrl'
                 rules={[{message: 'Please input socket url!'}]}
               >
                 <Input allowClear/>
@@ -220,7 +225,7 @@ export default function IndexPage() {
             title={
               <div>
                 <Button
-                  shape="circle"
+                  shape='circle'
                   icon={<GithubOutlined/>}
                   href={'https://github.com/Ailln/fuzi-bot'}
                 />
@@ -228,25 +233,25 @@ export default function IndexPage() {
               </div>
             }
             hoverable
-            className="card"
+            className='card'
             extra={
               <div>
                 <Tag color={socketStatus === 'connected' ? 'success' : 'error'}>
                   {socketStatus}
                 </Tag>
                 <Button
-                  shape="circle"
+                  shape='circle'
                   icon={<SettingOutlined/>}
                   onClick={() => setModalVisible(true)}
                 />
               </div>
             }
             actions={[
-              <div className="human-input">
+              <div className='human-input'>
                 <Select
                   showSearch
-                  className="human-input-message"
-                  placement="topLeft"
+                  className='human-input-message'
+                  placement='topLeft'
                   dropdownMatchSelectWidth={false}
                   defaultActiveFirstOption={false}
                   showArrow={false}
@@ -277,8 +282,8 @@ export default function IndexPage() {
                 </Select>
                 <Button
                   ghost
-                  className="human-input-button"
-                  type="primary"
+                  className='human-input-button'
+                  type='primary'
                   size={'large'}
                   onClick={() => handleSend()}
                 >
@@ -287,7 +292,7 @@ export default function IndexPage() {
               </div>,
             ]}
           >
-            <div className="message-content">
+            <div className='message-content'>
               {messages.map((message, index) => (
                 <Meta
                   key={index}
@@ -296,14 +301,16 @@ export default function IndexPage() {
                       ? 'left-message-card'
                       : 'right-message-card ant-card-rtl'
                   }
-                  avatar={<Avatar src={message.avatar}/>}
+                  avatar={<Avatar src={message.avatar} size={'large'}/>}
                   title={message.name}
                   description={message.content}
                 />
               ))}
             </div>
           </Card>
-          <div className="footer">Created by Ailln at 2023</div>
+          <div className='footer'>
+            Created by <span className='footer-bold'>Ailln</span> at {new Date().getFullYear()}.
+          </div>
         </Col>
         <Col xs={0} md={4} lg={6}></Col>
       </Row>
