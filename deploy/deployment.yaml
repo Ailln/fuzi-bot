@@ -9,7 +9,7 @@ spec:
     - port: 80
       nodePort: 30100
   selector:
-     app: fuzi-bot
+    app: fuzi-bot
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,7 +27,7 @@ spec:
         app: fuzi-bot
     spec:
       containers:
-      - name: fuzi-bot
-        image: 192.168.2.101:5000/fuzi-bot:1.0.2
-        ports:
-        - containerPort: 80
+        - name: fuzi-bot
+          image: 192.168.2.101:5000/fuzi-bot:1.0.0
+          ports:
+            - containerPort: 80

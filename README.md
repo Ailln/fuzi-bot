@@ -32,11 +32,17 @@
 git clone https://github.com/Ailln/fuzi-bot.git
 
 cd fuzi-bot
-# 安装依赖
+# 本地系统环境开发
 npm install
-
 npm run start
 # 打开 http://localhost:8000
+
+# 本地 docker 环境开发
+docker run -it --name fuzi-bot -v $PWD:/app \
+  -p 8000:8000 node:16.18.1-buster bash
+cd /app
+npm install
+npm run start
 ```
 
 ## 4 部署
@@ -46,34 +52,34 @@ npm run start
 ```bash
 cd fuzi-bot
 
-docker build -t fuzi-bot:1.0.2 .
+docker build -t fuzi-bot:1.0.0 .
 
-docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.2
+docker run -d -p 8000:80 --name fuzi-bot fuzi-bot:1.0.0
 # 打开 http://localhost:8000
 ```
 
 ### 4.2 Kubernetes
 
 ```bash
+# 需要 docker registry
+docker tag fuzi-bot:1.0.0 192.168.2.101:5000/fuzi-bot:1.0.0
+docker push 192.168.2.101:5000/fuzi-bot:1.0.0
+
 cd fuzi-bot
-
-docker tag fuzi-bot:1.0.2 192.168.2.101:5000/fuzi-bot:1.0.2
-docker push 192.168.2.101:5000/fuzi-bot:1.0.2
-
 kubectl apply -f deploy/deployment.yaml
 # 打开 http://localhost:30100
 ```
 
-## 5 参考
+## 5 TODO
+
+- [ ] 使用 [ChatUI](https://chatui.io/) 重构
+
+## 6 参考
 
 - [Ant Design](https://ant.design/)
 - [React](https://reactjs.org/)
 
-## 6 许可证
+## 7 许可证
 
 [![](https://award.dovolopor.com?lt=License&rt=Apache2&rbc=orange)](./LICENSE)
 [![](https://award.dovolopor.com?lt=Ailln's&rt=idea&lbc=lightgray&rbc=red&ltc=red)](https://github.com/Ailln/award)
-
-## 7 交流
-
-请添加微信号：`Ailln_`，备注「fuzi」，我邀请你进入交流群。

@@ -1,7 +1,7 @@
 import './index.less';
 
-import { useState, useEffect } from 'react';
-import { SettingOutlined, GithubOutlined } from '@ant-design/icons';
+import {useState, useEffect} from 'react';
+import {SettingOutlined, GithubOutlined} from '@ant-design/icons';
 import {
   Row,
   Col,
@@ -15,10 +15,10 @@ import {
   Tag,
   Select,
 } from 'antd';
-import { io } from 'socket.io-client';
+import {io} from 'socket.io-client';
 
-const { Meta } = Card;
-const { Option } = Select;
+const {Meta} = Card;
+const {Option} = Select;
 
 let timer: NodeJS.Timeout;
 
@@ -26,7 +26,7 @@ export default function IndexPage() {
   const humanMessageTemplate = (message: string) => {
     return {
       sender: 'human',
-      avatar: 'https://joeschmoe.io/api/v1/0',
+      avatar: 'https://joesch.moe/api/v1/random?key=1',
       name: 'Human',
       content: message,
     };
@@ -34,7 +34,7 @@ export default function IndexPage() {
   const botMessageTemplate = (message: string) => {
     return {
       sender: 'bot',
-      avatar: 'https://joeschmoe.io/api/v1/1',
+      avatar: 'https://joesch.moe/api/v1/random?key=0',
       name: 'Bot',
       content: message,
     };
@@ -120,7 +120,7 @@ export default function IndexPage() {
   const onModalOk = () => {
     const formSocketUrl = form.getFieldValue('socketUrl');
     setSocketUrl(formSocketUrl);
-    setSocket(io(formSocketUrl, { reconnection: false }));
+    setSocket(io(formSocketUrl, {reconnection: false}));
     sessionStorage.setItem('SOCKET_URL', formSocketUrl);
     setModalVisible(false);
   };
@@ -138,7 +138,7 @@ export default function IndexPage() {
       if (value.trim().length > 0) {
         if (!socket.connected) {
           console.log('##### socket   not connected, i will connect it');
-          setSocket(io(socketUrl, { reconnection: false }));
+          setSocket(io(socketUrl, {reconnection: false}));
         }
 
         clearTimeout(timer);
@@ -202,17 +202,17 @@ export default function IndexPage() {
             width={400}
           >
             <Form
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
+              labelCol={{span: 8}}
+              wrapperCol={{span: 16}}
               form={form}
-              initialValues={{ socketUrl: socketUrl }}
+              initialValues={{socketUrl: socketUrl}}
             >
               <Form.Item
                 label="SOCKET_URL"
                 name="socketUrl"
-                rules={[{ message: 'Please input socket url!' }]}
+                rules={[{message: 'Please input socket url!'}]}
               >
-                <Input allowClear />
+                <Input allowClear/>
               </Form.Item>
             </Form>
           </Modal>
@@ -221,10 +221,10 @@ export default function IndexPage() {
               <div>
                 <Button
                   shape="circle"
-                  icon={<GithubOutlined />}
+                  icon={<GithubOutlined/>}
                   href={'https://github.com/Ailln/fuzi-bot'}
                 />
-                <span style={{ marginLeft: 10 }}>{'FUZI-BOT'}</span>
+                <span style={{marginLeft: 10}}>{'FUZI-BOT'}</span>
               </div>
             }
             hoverable
@@ -236,7 +236,7 @@ export default function IndexPage() {
                 </Tag>
                 <Button
                   shape="circle"
-                  icon={<SettingOutlined />}
+                  icon={<SettingOutlined/>}
                   onClick={() => setModalVisible(true)}
                 />
               </div>
@@ -296,14 +296,14 @@ export default function IndexPage() {
                       ? 'left-message-card'
                       : 'right-message-card ant-card-rtl'
                   }
-                  avatar={<Avatar src={message.avatar} />}
+                  avatar={<Avatar src={message.avatar}/>}
                   title={message.name}
                   description={message.content}
                 />
               ))}
             </div>
           </Card>
-          <div className="footer">Created by Ailln at 2022</div>
+          <div className="footer">Created by Ailln at 2023</div>
         </Col>
         <Col xs={0} md={4} lg={6}></Col>
       </Row>
