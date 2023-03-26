@@ -78,6 +78,7 @@ kubectl apply -f deploy/deployment.yaml
 
 - [Ant Design](https://ant.design/)
 - [React](https://reactjs.org/)
+- [Personas Avatar Generator](https://personas.draftbit.com/)
 
 ## 7 许可证
 

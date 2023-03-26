@@ -1,11 +1,11 @@
 @import '~antd/lib/style/themes/default.less';
 
 .card-body {
-  padding: 90px 0;
+  padding: 40px 0;
 }
 
 .card {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 80px);
   border: 1px solid @blue-6;
   border-radius: 20px;
   margin: 10px;
@@ -36,27 +36,33 @@
 }
 
 .message-content {
-  height: calc(100vh - 356px);
+  height: calc(100vh - 278px);
   overflow-y: auto;
 }
 
-.human-input-select {
-  margin: 0;
-  width: 20%;
-}
-
 .human-input {
-  margin: 10px 10px 0 10px;
+  margin: 0 10px;
 }
 
 .human-input-message {
-  width: calc(60% - 20px);
-  margin: 0 10px 0 10px;
+  width: calc(100% - 20px);
+  margin: 0 10px;
   text-align: left;
 }
 
-.human-input-button {
+.human-input-select {
+  width: calc(40% - 30px);
+  margin: 10px 0 0 0;
+}
+
+.human-input-clear-button {
   width: 20%;
+  margin: 10px 5px 0 5px;
+}
+
+.human-input-message-button {
+  width: 40%;
+  margin: 10px 5px 0 0;
 }
 
 .footer {
