@@ -1,6 +1,13 @@
 import './index.less';
 
-import { useState, useEffect } from 'react';
+import {
+  useState,
+  useEffect,
+  Key,
+  ReactChild,
+  ReactFragment,
+  ReactPortal,
+} from 'react';
 import {
   SettingOutlined,
   GithubOutlined,
@@ -29,12 +36,12 @@ const { Option } = Select;
 let timer: NodeJS.Timeout;
 
 export default function IndexPage() {
-  const initMessages = [
-    { role: 'user', content: 'hi' },
-    { role: 'bot', content: 'hello, how can I help you?' },
-  ];
-  const [messages, setMessages] = useState(initMessages);
-  const [modelType, setModelType] = useState('JointNLU');
+  const [messages, setMessages] = useState<any | []>(
+    sessionStorage.getItem('MESSAGES') || [],
+  );
+  const [modelType, setModelType] = useState(
+    sessionStorage.getItem('MODEL_TYPE') || 'JointNLU',
+  );
   const [inputValue, setInputValue] = useState('');
   const [isInputBlur, setIsInputBlur] = useState(false);
   const [isSelectMessage, setIsSelectMessage] = useState(false);
@@ -76,7 +83,7 @@ export default function IndexPage() {
 
     socket.on('chat-reply', (msg) => {
       console.log('socket receive chat-reply: ' + msg);
-      setMessages((messages) => [...messages, msg]);
+      setMessages((messages: any) => [...messages, msg]);
     });
 
     socket.on('suggest-reply', (msg) => {
@@ -95,14 +102,14 @@ export default function IndexPage() {
 
   // save session messages
   useEffect(() => {
-    if (messages.length <= 2) {
-      const contents = JSON.parse(sessionStorage.getItem('messages') ?? '[]');
-      if (contents.length > initMessages.length) {
+    if (messages.length === 0) {
+      const contents = JSON.parse(sessionStorage.getItem('MESSAGES') ?? '[]');
+      if (contents.length > 0) {
         setMessages(contents);
       }
     } else {
       console.log('save messages to session storage');
-      sessionStorage.setItem('messages', JSON.stringify(messages));
+      sessionStorage.setItem('MESSAGES', JSON.stringify(messages));
     }
   }, [messages]);
 
@@ -129,9 +136,6 @@ export default function IndexPage() {
   };
 
   const handleSearch = (value: string) => {
-    console.log('search value: ' + value);
-    console.log('search inputValue: ' + inputValue);
-
     if (!isInputBlur) {
       if (isSelectMessage) {
         setIsSelectMessage(false);
@@ -184,7 +188,7 @@ export default function IndexPage() {
     if (socketStatus === 'connected') {
       if (value.trim().length > 0) {
         const message = { role: 'user', content: value };
-        setMessages((messages) => [...messages, message]);
+        setMessages((messages: any) => [...messages, message]);
         const sendData = {
           modelType: modelType,
           messages: [...messages, message],
@@ -203,8 +207,13 @@ export default function IndexPage() {
 
   const handleClear = () => {
     console.log('clear!');
-    sessionStorage.removeItem('messages');
-    setMessages(initMessages);
+    sessionStorage.removeItem('MESSAGES');
+    setMessages([]);
+  };
+
+  const handleModelTypeChange = (value: string) => {
+    setModelType(value);
+    sessionStorage.setItem('MODEL_TYPE', value);
   };
 
   return (
@@ -301,7 +310,7 @@ export default function IndexPage() {
                   <Select
                     className="human-input-select"
                     defaultValue={modelType}
-                    onChange={setModelType}
+                    onChange={handleModelTypeChange}
                     size="large"
                     options={[
                       { value: 'JointNLU', label: 'JointNLU' },
@@ -338,7 +347,7 @@ export default function IndexPage() {
             ]}
           >
             <div className="message-content">
-              {messages.map((message, index) => (
+              {messages.map((message: any, index: number) => (
                 <Meta
                   key={index}
                   className={
