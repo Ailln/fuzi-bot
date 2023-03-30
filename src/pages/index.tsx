@@ -1,18 +1,13 @@
 import './index.less';
 
-import {
-  useState,
-  useEffect,
-  Key,
-  ReactChild,
-  ReactFragment,
-  ReactPortal,
-} from 'react';
+import { useState, useEffect } from 'react';
 import {
   SettingOutlined,
   GithubOutlined,
   UserOutlined,
   RobotOutlined,
+  SendOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import {
   Row,
@@ -31,9 +26,7 @@ import {
 import { io } from 'socket.io-client';
 
 const { Meta } = Card;
-const { Option } = Select;
-
-let timer: NodeJS.Timeout;
+const { TextArea } = Input;
 
 export default function IndexPage() {
   const [messages, setMessages] = useState<any | []>(
@@ -43,10 +36,6 @@ export default function IndexPage() {
     sessionStorage.getItem('MODEL_TYPE') || 'JointNLU',
   );
   const [inputValue, setInputValue] = useState('');
-  const [isInputBlur, setIsInputBlur] = useState(false);
-  const [isSelectMessage, setIsSelectMessage] = useState(false);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [suggestMessages, setSuggestMessages] = useState<[string] | []>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [socketUrl, setSocketUrl] = useState(
     sessionStorage.getItem('SOCKET_URL') || window.location.origin,
@@ -86,14 +75,6 @@ export default function IndexPage() {
       setMessages((messages: any) => [...messages, msg]);
     });
 
-    socket.on('suggest-reply', (msg) => {
-      console.log('socket receive suggest-reply: ' + msg);
-      if (msg.length > 0) {
-        setIsSelectOpen(true);
-      }
-      setSuggestMessages(msg);
-    });
-
     return () => {
       socket.close();
       console.log('socket disconnected');
@@ -127,7 +108,7 @@ export default function IndexPage() {
 
   const [form] = Form.useForm();
 
-  const onModalOk = () => {
+  const onSetURLIsOK = () => {
     const formSocketUrl = form.getFieldValue('socketUrl');
     setSocketUrl(formSocketUrl);
     setSocket(io(formSocketUrl, { reconnection: false }));
@@ -135,54 +116,8 @@ export default function IndexPage() {
     setModalVisible(false);
   };
 
-  const handleSearch = (value: string) => {
-    if (!isInputBlur) {
-      if (isSelectMessage) {
-        setIsSelectMessage(false);
-      } else {
-        setInputValue(value);
-      }
-      if (value.trim().length > 0) {
-        if (!socket.connected) {
-          console.log('##### socket not connected, i will connect it');
-          setSocket(io(socketUrl, { reconnection: false }));
-        }
-
-        clearTimeout(Number(timer));
-        timer = setTimeout(() => {
-          console.log('!!!!! suggest-request: ' + value);
-          socket.emit('suggest-request', value);
-        }, 1000);
-      } else {
-        setIsSelectOpen(false);
-        setSuggestMessages([]);
-      }
-    }
-  };
-
-  const handleChange = (value: string) => {
-    console.log('change: ' + value);
-  };
-
-  const handleSelect = (value: string) => {
-    console.log('select: ' + value);
-    setIsSelectMessage(true);
-    setInputValue(value);
-    setIsSelectOpen(false);
-  };
-
-  const handleKeyDown = (event: any) => {
-    if (event.key === 'Enter') {
-      if (!isSelectOpen || suggestMessages.length === 0) {
-        handleSend();
-      } else {
-        setIsSelectMessage(true);
-        setIsSelectOpen(false);
-      }
-    }
-  };
-
-  const handleSend = (value: string = inputValue) => {
+  const handleSend = () => {
+    const value = inputValue;
     console.log('send: ' + value);
     // send message to api
     if (socketStatus === 'connected') {
@@ -201,8 +136,6 @@ export default function IndexPage() {
     } else {
       message.error('please connect socket url');
     }
-
-    setIsSelectOpen(false);
   };
 
   const handleClear = () => {
@@ -226,7 +159,7 @@ export default function IndexPage() {
             centered
             destroyOnClose
             open={modalVisible}
-            onOk={onModalOk}
+            onOk={onSetURLIsOK}
             onCancel={() => setModalVisible(false)}
             width={400}
           >
@@ -273,38 +206,16 @@ export default function IndexPage() {
             actions={[
               <div className="human-input">
                 <div>
-                  <Select
-                    showSearch
-                    className="human-input-message"
-                    placement="topLeft"
-                    dropdownMatchSelectWidth={false}
-                    defaultActiveFirstOption={false}
-                    showArrow={false}
-                    filterOption={false}
-                    value={inputValue}
-                    searchValue={inputValue}
-                    open={isSelectOpen}
-                    onSearch={handleSearch}
-                    onChange={handleChange}
-                    onSelect={handleSelect}
-                    onInputKeyDown={handleKeyDown}
-                    onFocus={() => {
-                      setIsInputBlur(false);
-                      setIsSelectOpen(true);
-                    }}
-                    onBlur={() => {
-                      setIsInputBlur(true);
-                      setIsSelectOpen(false);
-                    }}
-                    notFoundContent={null}
+                  <TextArea
+                    autoSize={{ minRows: 1, maxRows: 6 }}
                     size={'large'}
-                  >
-                    {suggestMessages.map((message, index) => (
-                      <Option key={index} value={message}>
-                        {message}
-                      </Option>
-                    ))}
-                  </Select>
+                    className="human-input-message"
+                    placeholder="please input question..."
+                    value={inputValue}
+                    onChange={(event) =>
+                      setInputValue(event.currentTarget.value)
+                    }
+                  />
                 </div>
                 <div>
                   <Select
@@ -328,6 +239,7 @@ export default function IndexPage() {
                       ghost
                       className="human-input-clear-button"
                       type="primary"
+                      icon={<DeleteOutlined />}
                       size={'large'}
                       danger
                     >
@@ -338,7 +250,8 @@ export default function IndexPage() {
                     className="human-input-message-button"
                     type="primary"
                     size={'large'}
-                    onClick={() => handleSend()}
+                    icon={<SendOutlined />}
+                    onClick={handleSend}
                   >
                     Send
                   </Button>
@@ -347,30 +260,32 @@ export default function IndexPage() {
             ]}
           >
             <div className="message-content">
-              {messages.map((message: any, index: number) => (
-                <Meta
-                  key={index}
-                  className={
-                    message.role === 'bot'
-                      ? 'left-message-card'
-                      : 'right-message-card ant-card-rtl'
-                  }
-                  avatar={
-                    <Avatar
-                      icon={
-                        message.role === 'bot' ? (
-                          <RobotOutlined />
-                        ) : (
-                          <UserOutlined />
-                        )
-                      }
-                      size={'large'}
-                    />
-                  }
-                  title={message.role === 'bot' ? 'Bot' : 'User'}
-                  description={message.content}
-                />
-              ))}
+              {messages.map(
+                (message: { role: string; content: string }, index: number) => (
+                  <Meta
+                    key={index}
+                    className={
+                      message.role === 'bot'
+                        ? 'left-message-card'
+                        : 'right-message-card ant-card-rtl'
+                    }
+                    avatar={
+                      <Avatar
+                        icon={
+                          message.role === 'bot' ? (
+                            <RobotOutlined />
+                          ) : (
+                            <UserOutlined />
+                          )
+                        }
+                        size={'large'}
+                      />
+                    }
+                    title={message.role === 'bot' ? 'Bot' : 'User'}
+                    description={message.content}
+                  />
+                ),
+              )}
             </div>
           </Card>
           <div className="footer">
