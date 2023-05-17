@@ -8,23 +8,25 @@
 
 ## 1 简介
 
-`夫子` 聊天机器人有 8 个模块组成：
+`夫子` 聊天机器人有 10 个模块组成：
 1. [fuzi-bot](https://github.com/Ailln/fuzi-bot): 聊天界面模块，与用户进行交互。
 2. [fuzi-bot-api](https://github.com/Ailln/fuzi-bot-api): 聊天接口模块，与其他后端模块通信。
-3. [fuzi-nlu](https://github.com/Ailln/fuzi-nlu): 自然语言处理模块，理解用户的问题。
-4. [fuzi-search](https://github.com/Ailln/fuzi-search): 语义检索模块，快速查找已有问题。
-5. fuzi: 对话管理模块，推断用户的意图。
-6. fuzi-admin: 后台管理模块，管理机器人的设置。
-7. fuzi-admin-api: 后台管理接口，与其他后端模块通信。
-8. fuzi-mark: 数据标注模块，标注用户的问题。
+3. [fuzi-search](https://github.com/Ailln/fuzi-search): 语义检索模块，快速查找已有问题。
+4. [fuzi-nlu](https://github.com/Ailln/fuzi-nlu): 自然语言处理模块，理解用户的问题。
+5. fuzi-llm: 大语言模型模块，针对非高频常识问题进行回复。
+6. fuzi: 对话管理模块，推断用户的意图。
+7. fuzi-admin: 后台管理模块，管理机器人的设置。
+8. fuzi-admin-api: 后台管理接口，与其他后端模块通信。
+9. fuzi-mark: 数据标注模块，标注用户的问题。
+10. fuzi-mark-api: 数据标注接口，与其他后端模块通信。
 
-![framework](.github/fuzi-framework.png)
+![framework](.github/fuzi-framework-v2.png)
 
 ## 2 预览
 
-![预览](.github/fuzi-preview.png)
+![预览](.github/fuzi-preview-v2.png)
 
-[>> 点我立即尝试 <<](https://fuzi.ailln.com)
+[>> 点我立即尝试 <<](https://fuzi.ollm.org)
 
 ## 3 快速上手
 
@@ -72,13 +74,13 @@ kubectl apply -f deploy/deployment.yaml
 
 ## 5 TODO
 
-- [ ] 使用 [ChatUI](https://chatui.io/) 重构
+- [ ] 右侧卡片信息展示；
+- [ ] 接入开源大语言模型；
 
 ## 6 参考
 
 - [Ant Design](https://ant.design/)
 - [React](https://reactjs.org/)
-- [Personas Avatar Generator](https://personas.draftbit.com/)
 
 ## 7 许可证
 
