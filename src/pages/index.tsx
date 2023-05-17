@@ -164,6 +164,7 @@ export default function IndexPage() {
       messages: [],
     };
     setSessionList([{ ...initSession }]);
+    changeSessionIndex(0);
   };
 
   const changeSessionIndex = (index: any) => {
