@@ -154,7 +154,15 @@ export default function IndexPage() {
     console.log('[delete] sessionIndex: ' + index);
     const currentSessionList = [...sessionList];
     currentSessionList.splice(index, 1);
-    setSessionList(currentSessionList);
+    if (currentSessionList.length > 0) {
+      setSessionList(currentSessionList);
+    } else {
+      const initSession = {
+        name: 'new#' + moment().format('YYYYMMDD#HHmmss#SSS'),
+        messages: [],
+      };
+      setSessionList([{ ...initSession }]);
+    }
   };
 
   const clearSessionList = () => {
